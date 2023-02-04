@@ -1,17 +1,24 @@
 package com.example.sunnyweather.ui.weather
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
+import android.hardware.input.InputManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethod
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.sunnyweather.R
@@ -55,8 +62,46 @@ class WeatherActivity : AppCompatActivity() {
                 Toast.makeText(this,"无法成功获取天气信息",Toast.LENGTH_LONG).show()
                  result.exceptionOrNull()?.printStackTrace()
             }
+            // 请求结束后需要将isRefreshing属性设置为false，用于表示刷新事件结束，并隐藏刷新进度条
+            swipeRefresh.isRefreshing=false
         })
+        swipeRefresh.setColorSchemeResources(R.color.purple_200)
+        refreshWeather()
+        swipeRefresh.setOnRefreshListener {
+            refreshWeather()
+        }
+        navBtn.setOnClickListener {
+            //打开滑动菜单
+          drawerLayout.openDrawer(GravityCompat.START)
+        }
+        drawerLayout.addDrawerListener(object :DrawerLayout.DrawerListener{
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                //当滑动菜单隐藏时，同时也要隐藏输入法
+                val manager=getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(drawerView.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+
+            }
+
+        })
+
+
+    }
+
+    fun refreshWeather(){
         viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat)
+        //让下拉刷新进度条显示出来
+        swipeRefresh.isRefreshing=true
     }
 
     private fun showWeatherInfo(weather: Weather) {

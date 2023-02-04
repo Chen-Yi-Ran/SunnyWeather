@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawerLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipeRefresh"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 <ScrollView
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -22,3 +32,23 @@
 </LinearLayout>
 
 </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_gravity="start"
+        android:background="@color/purple_500"
+        >
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/placeFragment"
+            android:name="com.example.sunnyweather.ui.place.PlaceFragment"
+            android:layout_marginTop="25dp"
+            />
+
+    </FrameLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
