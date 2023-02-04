@@ -17,6 +17,12 @@ object SunnyWeatherNetwork  {
 
     suspend fun searchPlaces(query:String)= placeService.searchPlaces(query).await()
 
+    private val weatherService=ServiceCreator.create(WeatherService::class.java)
+
+    suspend fun getDailyWeather(lng:Double,lat:Double)= weatherService.getDailyWeather(lng,lat).await()
+
+    suspend fun getRealtimeWeather(lng: Double,lat: Double)= weatherService.getRealtimeWeather(lng, lat).await()
+
     //将await()函数定义成了Call<T>的扩展函数，这样所有返回值是Call类型的Retrofit网络请求接口
     //都可以直接调用await()函数了。
     //await()函数中使用了suspendCoroutine函数来挂起当前协程，并且由于扩展函数的原因，我们现在拥有了
@@ -27,7 +33,7 @@ object SunnyWeatherNetwork  {
             enqueue(object :Callback<T>{
                 override fun onResponse(call: Call<T>, response: Response<T>) {
                     val body=response.body()
-                    Log.d("SunnyWeatherNetwork", "--->body: "+body)
+                    Log.d("SunnyWeatherNetwork", "--->body: "+response)
                     if(body!=null){
                         continuation.resume(body)
                     }else{
@@ -38,9 +44,7 @@ object SunnyWeatherNetwork  {
                 override fun onFailure(call: Call<T>, t: Throwable) {
                     continuation.resumeWithException(t)
                 }
-
             })
         }
     }
-
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.sunnyweather.logic.Repository
 import com.example.sunnyweather.logic.model.Place
+import java.net.ResponseCache
 
 //ViewModel层相当于逻辑层和UI层之间的一个桥梁
 class PlaceViewModel :ViewModel() {
@@ -25,4 +26,10 @@ class PlaceViewModel :ViewModel() {
     fun searchPlaces(query:String){
         searchLiveData.value=query
     }
+
+    fun savePlace(place: Place)=Repository.savePlace(place)
+
+    fun getSavedPlace()=Repository.getSharedPlace()
+
+    fun isPlaceSaved()=Repository.isPlaceSaved()
 }
